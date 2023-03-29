@@ -79,7 +79,7 @@ class SignUpScreenState extends State<SignUpScreen>{
                     child: TextFormField(
                       controller: passwordController,
                       cursorColor: Colors.black12,
-                      keyboardType: TextInputType.number,
+                      keyboardType: TextInputType.text,
                       style: const TextStyle(fontSize: 16, color: Color(0xFF19232d)),
                       validator: (value){
                         if(value!.isEmpty){
@@ -104,12 +104,6 @@ class SignUpScreenState extends State<SignUpScreen>{
                     onTap: (){
                       if(_formKey.currentState!.validate()){
                        signUp();
-                        // Navigator.push(
-                        //   context,
-                        //   MaterialPageRoute(builder: (context){
-                        //     return const LoginScreen();
-                        //   })
-                        // );
                       }
                     },
                     child: Container(
@@ -173,6 +167,12 @@ class SignUpScreenState extends State<SignUpScreen>{
       setState(() {
         loading = false;
       });
+      Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context){
+            return const LoginScreen();
+          })
+      );
     }).onError((error, stackTrace) {
       Utils().toastMessage(error.toString());
       setState(() {

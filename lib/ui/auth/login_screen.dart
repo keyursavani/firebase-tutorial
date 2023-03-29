@@ -1,4 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_tutorial/Utils/utils.dart';
+import 'package:firebase_tutorial/ui/auth/login_with_phone_number.dart';
 import 'package:firebase_tutorial/ui/auth/signup_screen.dart';
+import 'package:firebase_tutorial/ui/post/post_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -12,16 +16,44 @@ class LoginScreen extends StatefulWidget{
   }
 }
 class LoginScreenState extends State<LoginScreen>{
+  bool loading = false;
   final emailController  = TextEditingController();
   final passwordController  = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+
   final enabledBorder = const OutlineInputBorder(
     borderRadius: BorderRadius.all(
       Radius.circular(9),
     ),
     borderSide: BorderSide(color: Colors.black),
   );
+  FirebaseAuth _auth = FirebaseAuth.instance;
 
+   void login(){
+     setState(() {
+       loading = true;
+     });
+     _auth.signInWithEmailAndPassword(
+         email: emailController.text,
+         password: passwordController.text).then((value) {
+               Utils().toastMessage(value.user!.email.toString());
+               setState(() {
+                 loading = false;
+               });
+               Navigator.push(
+                   context,
+                   MaterialPageRoute(builder: (context){
+                     return const PostScreen();
+                   })
+               );
+     }).onError((error, stackTrace) {
+       debugPrint(error.toString());
+       Utils().toastMessage(error.toString());
+       setState(() {
+         loading = false;
+       });
+     });
+   }
   @override
   void dispose(){
     super.dispose();
@@ -80,7 +112,7 @@ class LoginScreenState extends State<LoginScreen>{
                       child: TextFormField(
                         controller: passwordController,
                         cursorColor: Colors.black12,
-                        keyboardType: TextInputType.number,
+                        keyboardType: TextInputType.text,
                         style: const TextStyle(fontSize: 16, color: Color(0xFF19232d)),
                         validator: (value){
                           if(value!.isEmpty){
@@ -104,7 +136,7 @@ class LoginScreenState extends State<LoginScreen>{
                     InkWell(
                       onTap: (){
                         if(_formKey.currentState!.validate()){
-
+                          login();
                         }
                       },
                       child: Container(
@@ -114,9 +146,10 @@ class LoginScreenState extends State<LoginScreen>{
                           borderRadius: BorderRadius.all(Radius.circular(15)),
                           color: Colors.deepPurple,
                         ),
-                        child: const Align(
+                        child:  Align(
                           alignment: Alignment.center,
-                          child: Text("Login",style: TextStyle(
+                          child: loading ? const CircularProgressIndicator(strokeWidth: 3,color: Colors.white,)
+                          :  const Text("Login",style: TextStyle(
                             color: Colors.white,
                             fontSize: 22
                           ),),
@@ -139,7 +172,7 @@ class LoginScreenState extends State<LoginScreen>{
                     Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context){
-                        return SignUpScreen();
+                        return const SignUpScreen();
                       })
                     );
                   },
@@ -150,8 +183,31 @@ class LoginScreenState extends State<LoginScreen>{
                   ),
                 ),
               ],
+            ),
+            const SizedBox(height: 40,),
+            InkWell(
+              onTap:  (){
+                Navigator.push(
+                  context,
+                MaterialPageRoute(builder: (context){
+                  return const LoginWithPhoneNumber();
+                }),
+                );
+              },
+              child: Padding(
+                padding:  const EdgeInsets.only(left: 30,right: 30),
+                child: Container(
+                  height: 50,
+                  decoration: BoxDecoration(
+                    borderRadius: const BorderRadius.all(Radius.circular(50)),
+                    border: Border.all(color: Colors.black),
+                  ),
+                  child: const Center(
+                    child: Text("Login With Phone"),
+                  ),
+                ),
+              ),
             )
-
           ],
         ),
       ),
