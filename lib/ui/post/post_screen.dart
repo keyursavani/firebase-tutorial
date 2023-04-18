@@ -22,6 +22,7 @@ class PostScreenState extends State<PostScreen>{
   final auth = FirebaseAuth.instance;
   final ref = FirebaseDatabase.instance.ref('Post');
   final searchFilter = TextEditingController();
+  final editController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -83,6 +84,11 @@ class PostScreenState extends State<PostScreen>{
                hintText: 'Search',
                border: OutlineInputBorder(),
              ),
+             onChanged: (String value){
+               setState(() {
+
+               });
+             },
            ),
          ),
          const SizedBox(height: 20,),
@@ -91,10 +97,50 @@ class PostScreenState extends State<PostScreen>{
                query: ref,
                defaultChild: const Text("Loading"),
                itemBuilder: (context , snapshot ,index ,animation){
-                 return  ListTile(
-                   title:  Text(snapshot.child('title').value.toString()),
-                   subtitle: Text(snapshot.child('id').value.toString()),
-                 );
+                 final title =  snapshot.child('title').value.toString();
+                 final id = snapshot.child('id').value.toString();
+                 if(searchFilter.text.isEmpty){
+                   return ListTile(
+                     title:  Text(snapshot.child('title').value.toString()),
+                     subtitle: Text(snapshot.child('id').value.toString()),
+                     trailing: PopupMenuButton(
+                       icon: const Icon(Icons.more_vert),
+                       itemBuilder: (context) =>[
+                          PopupMenuItem(
+                           value: 1,
+                           child: ListTile(
+                             onTap: (){
+                               Navigator.pop(context);
+                               showMyDialog(title , id);
+                             },
+                             leading: const Icon(Icons.edit),
+                             title: const Text("Edit"),
+                           ),
+                         ),
+                          PopupMenuItem(
+                           value: 2,
+                           child: ListTile(
+                             onTap: (){
+                               Navigator.pop(context);
+                               showMyDialog(title , id);
+                             },
+                             leading: const Icon(Icons.delete_outlined),
+                             title: const Text("Delete"),
+                           ),
+                         ),
+                       ],
+                     ),
+                   );
+                 }
+                 else if(title.toString().toLowerCase().contains(searchFilter.text.toLowerCase().toString())){
+                   return ListTile(
+                     title:  Text(snapshot.child('title').value.toString()),
+                     subtitle: Text(snapshot.child('id').value.toString()),
+                   );
+                 }
+                 else{
+                   return Container();
+                 }
                },
              )
          ),
@@ -111,6 +157,44 @@ class PostScreenState extends State<PostScreen>{
         },
         child: const Icon(Icons.add),
       ),
+    );
+  }
+  Future<void> showMyDialog(String title , String id) async{
+    editController.text = title;
+    return showDialog(
+        context: context,
+        builder: (BuildContext context){
+          return AlertDialog(
+            title: const Text("Update"),
+            content: Container(
+              child: TextField(
+                controller: editController,
+                decoration: const InputDecoration(
+                  hintText: 'Edit'
+                ),
+              ),
+            ),
+            actions: [
+              TextButton(
+                  onPressed: (){
+                    Navigator.pop(context);
+                  },
+                  child: const Text("Cancel")),
+              TextButton(
+                  onPressed: (){
+                    Navigator.pop(context);
+                    ref.child(id).update({
+                      'title': editController.text.toString(),
+                    }).then((value){
+                      Utils().toastMessage("Post Update");
+                    }).onError((error, stackTrace) {
+                      Utils().toastMessage(error.toString());
+                    });
+                  },
+                  child: const Text("Update")),
+            ],
+          );
+        }
     );
   }
 }
