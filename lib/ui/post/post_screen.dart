@@ -5,6 +5,7 @@ import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:firebase_tutorial/Utils/utils.dart';
 import 'package:firebase_tutorial/ui/auth/login_screen.dart';
 import 'package:firebase_tutorial/ui/post/add_post.dart';
+import 'package:firebase_tutorial/ui/post/uplode_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -121,8 +122,8 @@ class PostScreenState extends State<PostScreen>{
                            value: 2,
                            child: ListTile(
                              onTap: (){
+                               ref.child(snapshot.child('id').value.toString()).remove();
                                Navigator.pop(context);
-                               showMyDialog(title , id);
                              },
                              leading: const Icon(Icons.delete_outlined),
                              title: const Text("Delete"),
@@ -144,6 +145,32 @@ class PostScreenState extends State<PostScreen>{
                },
              )
          ),
+          InkWell(
+            onTap: (){
+              Navigator.push(
+                  context,
+                MaterialPageRoute(builder: (context){
+                  return const UploadImageScreen();
+                })
+              );
+            },
+            child: Container(
+              height: 50,
+              width: 300,
+              decoration: const BoxDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(15)),
+                color: Colors.deepPurple,
+              ),
+              child:  const Align(
+                alignment: Alignment.center,
+                 child:
+                Text("Upload Image",style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 22
+                ),),
+              ),
+            ),
+          )
         ],
       ),
       floatingActionButton: FloatingActionButton(
