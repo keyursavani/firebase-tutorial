@@ -75,157 +75,162 @@ class LoginScreenState extends State<LoginScreen>{
           centerTitle: true,
           title: const Text("Login"),
         ),
-        body: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Form(
-              key: _formKey,
-                child: Column(
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.only(left: 30,right: 30) ,
-                      child: TextFormField(
-                        controller: emailController,
-                        cursorColor: Colors.black12,
-                        style: const TextStyle(fontSize: 16, color: Color(0xFF19232d)),
-                        keyboardType: TextInputType.emailAddress,
-                        validator: (value){
-                          if(value!.isEmpty){
-                            return "Enter email";
-                          }
-                          return null;
-                        },
-                        decoration: InputDecoration(
-                          hintText: "email id",
-                          hintStyle: const TextStyle(fontSize:17, color: Colors.black54),
-                          prefixIcon:const Icon(Icons.person ,color: Colors.black45,),
-                          enabledBorder: enabledBorder,
-                          border: enabledBorder,
-                          focusedBorder: enabledBorder,
-                          floatingLabelBehavior: FloatingLabelBehavior.never,
+        body: SingleChildScrollView(
+          child: Container(
+            margin: const EdgeInsets.only(top: 50),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Form(
+                  key: _formKey,
+                    child: Column(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.only(left: 30,right: 30) ,
+                          child: TextFormField(
+                            controller: emailController,
+                            cursorColor: Colors.black12,
+                            style: const TextStyle(fontSize: 16, color: Color(0xFF19232d)),
+                            keyboardType: TextInputType.emailAddress,
+                            validator: (value){
+                              if(value!.isEmpty){
+                                return "Enter email";
+                              }
+                              return null;
+                            },
+                            decoration: InputDecoration(
+                              hintText: "email id",
+                              hintStyle: const TextStyle(fontSize:17, color: Colors.black54),
+                              prefixIcon:const Icon(Icons.person ,color: Colors.black45,),
+                              enabledBorder: enabledBorder,
+                              border: enabledBorder,
+                              focusedBorder: enabledBorder,
+                              floatingLabelBehavior: FloatingLabelBehavior.never,
+                            ),
+                          ),
                         ),
-                      ),
-                    ),
-                    const SizedBox(height: 20,),
-                    Container(
-                      padding: const EdgeInsets.only(left: 30,right: 30) ,
-                      child: TextFormField(
-                        controller: passwordController,
-                        cursorColor: Colors.black12,
-                        keyboardType: TextInputType.text,
-                        style: const TextStyle(fontSize: 16, color: Color(0xFF19232d)),
-                        validator: (value){
-                          if(value!.isEmpty){
-                            return "Enter Password";
-                          }
-                          return null;
-                        },
-                        obscureText: true,
-                        decoration: InputDecoration(
-                          hintText: "Password",
-                          hintStyle: const TextStyle(fontSize:17, color: Colors.black54),
-                          prefixIcon:const Icon(Icons.lock_outline ,color: Colors.black45,),
-                          enabledBorder: enabledBorder,
-                          border: enabledBorder,
-                          focusedBorder: enabledBorder,
-                          floatingLabelBehavior: FloatingLabelBehavior.never,
+                        const SizedBox(height: 20,),
+                        Container(
+                          padding: const EdgeInsets.only(left: 30,right: 30) ,
+                          child: TextFormField(
+                            controller: passwordController,
+                            cursorColor: Colors.black12,
+                            keyboardType: TextInputType.text,
+                            style: const TextStyle(fontSize: 16, color: Color(0xFF19232d)),
+                            validator: (value){
+                              if(value!.isEmpty){
+                                return "Enter Password";
+                              }
+                              return null;
+                            },
+                            obscureText: true,
+                            decoration: InputDecoration(
+                              hintText: "Password",
+                              hintStyle: const TextStyle(fontSize:17, color: Colors.black54),
+                              prefixIcon:const Icon(Icons.lock_outline ,color: Colors.black45,),
+                              enabledBorder: enabledBorder,
+                              border: enabledBorder,
+                              focusedBorder: enabledBorder,
+                              floatingLabelBehavior: FloatingLabelBehavior.never,
+                            ),
+                          ),
                         ),
-                      ),
-                    ),
-                    const SizedBox(height: 40,),
-                    InkWell(
-                      onTap: (){
-                        if(_formKey.currentState!.validate()){
-                          login();
-                        }
-                      },
-                      child: Container(
-                        height: 50,
-                        width: 200,
-                        decoration: const BoxDecoration(
-                          borderRadius: BorderRadius.all(Radius.circular(15)),
-                          color: Colors.deepPurple,
+                        const SizedBox(height: 40,),
+                        InkWell(
+                          onTap: (){
+                            if(_formKey.currentState!.validate()){
+                              login();
+                            }
+                          },
+                          child: Container(
+                            height: 50,
+                            width: 200,
+                            decoration: const BoxDecoration(
+                              borderRadius: BorderRadius.all(Radius.circular(15)),
+                              color: Colors.deepPurple,
+                            ),
+                            child:  Align(
+                              alignment: Alignment.center,
+                              child: loading ? const CircularProgressIndicator(strokeWidth: 3,color: Colors.white,)
+                              :  const Text("Login",style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 22
+                              ),),
+                            ),
+                          ),
                         ),
-                        child:  Align(
-                          alignment: Alignment.center,
-                          child: loading ? const CircularProgressIndicator(strokeWidth: 3,color: Colors.white,)
-                          :  const Text("Login",style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 22
-                          ),),
+                        SizedBox(height: 20,),
+                        InkWell(
+                          onTap: (){
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context){
+                                  return const ForgotPasswordScreen();
+                                })
+                            );
+                          },
+                          child: const Text("Forgot Password",style: TextStyle(
+                            color:Colors.deepPurple,
+                            fontSize: 17,
+                          ),
+                          ),
                         ),
-                      ),
-                    ),
-                    SizedBox(height: 20,),
+                      ],
+                    )
+                ),
+                const SizedBox(height: 30,),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children:  [
+                    const Text("Don't have an account?  " ,style: TextStyle(
+                      color: Colors.black,
+                      fontSize:17,
+                    ),),
                     InkWell(
                       onTap: (){
                         Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context){
-                              return const ForgotPasswordScreen();
-                            })
+                          context,
+                          MaterialPageRoute(builder: (context){
+                            return const SignUpScreen();
+                          })
                         );
                       },
-                      child: const Text("Forgot Password",style: TextStyle(
-                        color:Colors.deepPurple,
-                        fontSize: 17,
+                      child: const Text("Signup",style: TextStyle(
+                          color:Colors.deepPurple,
+                        fontSize: 20,
                       ),
                       ),
                     ),
                   ],
-                )
-            ),
-            const SizedBox(height: 30,),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children:  [
-                const Text("Don't have an account?  " ,style: TextStyle(
-                  color: Colors.black,
-                  fontSize:17,
-                ),),
+                ),
+                const SizedBox(height: 40,),
                 InkWell(
-                  onTap: (){
+                  onTap:  (){
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context){
-                        return const SignUpScreen();
-                      })
+                    MaterialPageRoute(builder: (context){
+                      return const LoginWithPhoneNumber();
+                    }),
                     );
                   },
-                  child: const Text("Signup",style: TextStyle(
-                      color:Colors.deepPurple,
-                    fontSize: 20,
+                  child: Padding(
+                    padding:  const EdgeInsets.only(left: 30,right: 30),
+                    child: Container(
+                      height: 50,
+                      decoration: BoxDecoration(
+                        borderRadius: const BorderRadius.all(Radius.circular(50)),
+                        border: Border.all(color: Colors.black),
+                      ),
+                      child: const Center(
+                        child: Text("Login With Phone"),
+                      ),
+                    ),
                   ),
-                  ),
-                ),
+                )
               ],
             ),
-            const SizedBox(height: 40,),
-            InkWell(
-              onTap:  (){
-                Navigator.push(
-                  context,
-                MaterialPageRoute(builder: (context){
-                  return const LoginWithPhoneNumber();
-                }),
-                );
-              },
-              child: Padding(
-                padding:  const EdgeInsets.only(left: 30,right: 30),
-                child: Container(
-                  height: 50,
-                  decoration: BoxDecoration(
-                    borderRadius: const BorderRadius.all(Radius.circular(50)),
-                    border: Border.all(color: Colors.black),
-                  ),
-                  child: const Center(
-                    child: Text("Login With Phone"),
-                  ),
-                ),
-              ),
-            )
-          ],
+          ),
         ),
       ),
     );
